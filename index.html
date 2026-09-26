@@ -12,7 +12,7 @@
 :root{--bg:#101510;--lcd:#cad9ae;--ink:#1a291e;--mid:#627957;--panel:#b7c99b}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:"Courier New",monospace;color:var(--ink);min-height:100vh;display:flex;justify-content:center;padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom)}.app{width:min(100%,430px);padding:14px 0 22px}.lcd{background:var(--lcd);border:5px solid var(--mid);border-radius:15px;min-height:610px;padding:15px;box-shadow:inset 0 0 0 3px var(--ink)}header{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--ink);padding:3px 4px 10px;font-weight:bold}.brand{font-size:20px}.small{font-size:11px}.screen{padding:15px 3px 8px;min-height:475px}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}.title{text-align:center;font-size:22px;font-weight:bold;margin:5px 0 14px}.pint-wrap{text-align:center;margin:8px auto}.pint{width:135px;height:190px;margin:auto;position:relative;clip-path:polygon(4% 0,96% 0,83% 100%,17% 100%);background:var(--lcd);border:0}.pint:before{content:"";position:absolute;inset:0;background:var(--ink);clip-path:polygon(0 0,100% 0,87% 100%,13% 100%,17% 96%,82% 96%,94% 4%,6% 4%)}.inner{position:absolute;left:9px;right:9px;top:8px;bottom:8px;clip-path:polygon(0 0,100% 0,86% 100%,14% 100%);background:var(--lcd);overflow:hidden}.beer{position:absolute;bottom:0;left:0;right:0;background:var(--mid);transition:height .5s}.foam{position:absolute;left:0;right:0;height:14px;background:var(--lcd);top:-5px;border-bottom:5px dotted var(--ink)}.face{position:absolute;left:0;right:0;bottom:42px;text-align:center;font-size:34px;font-weight:bold;z-index:3;letter-spacing:2px}.shine{position:absolute;width:5px;background:var(--mid);height:110px;left:23px;top:25px;transform:rotate(-4deg);opacity:.8}.statusbox{border:3px solid var(--ink);padding:10px;margin-top:12px}.big{font-size:24px;font-weight:bold}.center{text-align:center}.muted{color:var(--mid);font-weight:bold}.timer{font-size:28px;font-weight:bold}.menu button,.actions button{width:100%;font:700 16px "Courier New",monospace;border:3px solid var(--ink);background:transparent;color:var(--ink);padding:14px 10px;margin:7px 0;text-align:left;border-radius:0}.menu button:active,.actions button:active{background:var(--ink);color:var(--lcd)}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.actions button{text-align:center}.primary{background:var(--ink)!important;color:var(--lcd)!important}.die{width:110px;height:110px;border:5px solid var(--ink);margin:20px auto;display:grid;place-items:center;font-size:54px;font-weight:bold}.drink{font-size:25px;font-weight:bold;text-align:center;margin:18px 0}.footer{border-top:3px solid var(--ink);padding-top:9px;margin-top:9px;font-size:11px;font-weight:bold}.dead{filter:grayscale(1);opacity:.65}.hidden{display:none}.device-lock{position:fixed;inset:0;background:var(--bg);z-index:9998;display:flex;align-items:center;justify-content:center;padding:20px}.device-lock.hidden{display:none}.lock-lcd{width:min(100%,430px);background:var(--lcd);border:5px solid var(--mid);box-shadow:inset 0 0 0 3px var(--ink);border-radius:15px;padding:26px 18px;text-align:center}.lock-brand{font-size:25px;font-weight:bold;border-bottom:3px solid var(--ink);padding-bottom:14px;margin-bottom:28px}.lock-icon{font-size:58px;margin:15px}.lock-state{font-size:20px;font-weight:bold;margin:16px 0}.lock-dots{font-size:25px;letter-spacing:7px;margin:20px 0}.toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--lcd);border:3px solid var(--mid);padding:10px 14px;font-weight:bold;z-index:9999;box-shadow:0 3px 0 var(--mid);max-width:90%;text-align:center}.progress{height:25px;border:3px solid var(--ink);padding:3px;margin:25px 15px}.progress>div{height:100%;background:var(--mid);width:0}.note{font-size:11px;line-height:1.4}.pill{border:2px solid var(--ink);padding:5px 8px;font-size:11px;font-weight:bold} @media(max-width:360px){.lcd{min-height:570px}.screen{min-height:440px}.pint{width:115px;height:165px}.brand{font-size:17px}}
 </style>
 </head>
-<body><div id="deviceLock" class="device-lock"><div class="lock-lcd"><div class="lock-brand">BREATH//BUDDY</div><div class="lock-icon">🍺</div><div id="lockState" class="lock-state">SEARCHING FOR BREATHBUDDY...</div><div id="lockDots" class="lock-dots">■ ■ ■ □ □</div><p class="note">Turn on your BreathBuddy device<br>and keep it nearby.</p><p id="lockDetail" class="small muted">DEVICE REQUIRED</p></div></div><main class="app"><section class="lcd"><header><span class="brand">BREATH//BUDDY</span><span class="small">WEB v0.9</span></header><div id="screen" class="screen"></div><div id="footer" class="footer">READY</div></section></main>
+<body><div id="deviceLock" class="device-lock"><div class="lock-lcd"><div class="lock-brand">BREATH//BUDDY</div><div class="lock-icon">🍺</div><div id="lockState" class="lock-state">SEARCHING FOR BREATHBUDDY...</div><div id="lockDots" class="lock-dots">■ ■ ■ □ □</div><p class="note">Turn on your BreathBuddy device<br>and keep it nearby.</p><p id="lockDetail" class="small muted">DEVICE REQUIRED</p></div></div><main class="app"><section class="lcd"><header><span class="brand">BREATH//BUDDY</span><span class="small">WEB v0.9.1</span></header><div id="screen" class="screen"></div><div id="footer" class="footer">READY</div></section></main>
 <script>
 const states=[
  {name:'NOT DRUNK',fill:16,mood:'Sober and steady.',face:'^‿^'},
@@ -27,26 +27,51 @@ const SERVICE_UUID='12345678-1234-1234-1234-123456789000';
 const CHARACTERISTIC_UUID='12345678-1234-1234-1234-123456789001';
 const el=document.getElementById('screen'),foot=document.getElementById('footer');
 const deviceLock=document.getElementById('deviceLock'),lockState=document.getElementById('lockState'),lockDetail=document.getElementById('lockDetail');
-let nativeBridge=!!(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.breathBuddy);
 function setDeviceLock(mode,detail=''){
   if(mode==='connected'){
     bleConnected=true; deviceLock.classList.add('hidden'); lockState.textContent='CONNECTED'; lockDetail.textContent=detail||'BREATHBUDDY READY'; render(); toast('🍺 BREATHBUDDY CONNECTED'); return;
   }
   bleConnected=false; deviceLock.classList.remove('hidden');
   if(mode==='connecting'){lockState.textContent='BREATHBUDDY FOUND';lockDetail.textContent=detail||'CONNECTING...';}
-  else if(mode==='disconnected'){lockState.textContent='CONNECTION LOST';lockDetail.textContent=detail||'RECONNECTING...';}
-  else {lockState.textContent='SEARCHING FOR BREATHBUDDY...';lockDetail.textContent=detail||'DEVICE REQUIRED';}
+  else if(mode==='disconnected'){lockState.textContent='CONNECTION LOST';lockDetail.textContent=detail||'TAP TO RECONNECT';}
+  else {lockState.textContent='SEARCHING FOR BREATHBUDDY...';lockDetail.textContent=detail||'TAP SCREEN TO CONNECT';}
 }
-window.BreathBuddyNative={
-  searching:()=>setDeviceLock('searching'),
-  connecting:()=>setDeviceLock('connecting'),
-  connected:()=>setDeviceLock('connected'),
-  disconnected:()=>setDeviceLock('disconnected'),
-  reading:(value)=>applyReading(parseFloat(value))
-};
-function startNativeBluetooth(){
-  if(nativeBridge){window.webkit.messageHandlers.breathBuddy.postMessage({action:'start'});}
-  else {setDeviceLock('searching','OPEN IN BREATHBUDDY ON IPHONE');}
+async function connectBluefy(){
+  if(bleConnected)return;
+  if(!navigator.bluetooth){setDeviceLock('searching','OPEN THIS SITE IN BLUEFY');return;}
+  try{
+    setDeviceLock('searching','CHOOSE BREATHBUDDY');
+    bleDevice=await navigator.bluetooth.requestDevice({
+      filters:[{services:[SERVICE_UUID]}],
+      optionalServices:[SERVICE_UUID]
+    });
+    setDeviceLock('connecting');
+    bleDevice.addEventListener('gattserverdisconnected',onBleDisconnected);
+    const server=await bleDevice.gatt.connect();
+    const service=await server.getPrimaryService(SERVICE_UUID);
+    bleCharacteristic=await service.getCharacteristic(CHARACTERISTIC_UUID);
+    await bleCharacteristic.startNotifications();
+    bleCharacteristic.addEventListener('characteristicvaluechanged',onBleValue);
+    setDeviceLock('connected');
+  }catch(err){console.error(err);setDeviceLock('searching','TAP SCREEN TO TRY AGAIN');}
+}
+deviceLock.addEventListener('click',connectBluefy);
+async function tryKnownDevice(){
+  if(!navigator.bluetooth){setDeviceLock('searching','OPEN THIS SITE IN BLUEFY');return;}
+  if(typeof navigator.bluetooth.getDevices!=='function'){setDeviceLock('searching','TAP SCREEN TO CONNECT');return;}
+  try{
+    const devices=await navigator.bluetooth.getDevices();
+    const known=devices.find(d=>d.name==='BreathBuddy')||devices[0];
+    if(!known){setDeviceLock('searching','TAP SCREEN TO CONNECT');return;}
+    bleDevice=known;setDeviceLock('connecting','RECONNECTING...');
+    bleDevice.addEventListener('gattserverdisconnected',onBleDisconnected);
+    const server=await bleDevice.gatt.connect();
+    const service=await server.getPrimaryService(SERVICE_UUID);
+    bleCharacteristic=await service.getCharacteristic(CHARACTERISTIC_UUID);
+    await bleCharacteristic.startNotifications();
+    bleCharacteristic.addEventListener('characteristicvaluechanged',onBleValue);
+    setDeviceLock('connected');
+  }catch(err){console.error(err);setDeviceLock('searching','TAP SCREEN TO CONNECT');}
 }
 function remain(){return !analysed||!deadline?600:Math.max(0,Math.ceil((deadline-Date.now())/1000))}
 function clock(){const n=remain();return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
@@ -101,5 +126,5 @@ function help(){page='help';render()}
 function helpPage(){el.innerHTML=`<div class="title">HOW IT WORKS</div><div class="statusbox"><p><b>1.</b> Analyse to start or reset the 10-minute timer.</p><p><b>2.</b> Analysis sets the pint's status from NOT DRUNK to BLASTED.</p><p><b>3.</b> Roll for a Drink is a separate weighted picker and never changes the character.</p><p><b>4.</b> When the timer reaches zero, the pint pal dies.</p><p><b>5.</b> Analyse again to revive it.</p></div><p class="note">BLE mode can receive an experimental reading from BreathBuddy hardware. Simulation mode remains available when disconnected. Readings are prototype estimates only and must not be used to decide whether to drive.</p><button style="width:100%;padding:14px;font:700 16px Courier New;border:3px solid var(--ink);background:var(--ink);color:var(--lcd)" onclick="goHome()">BACK HOME</button>`;foot.textContent='QUICK GUIDE'}
 function goHome(){page='home';render()}
 function render(){if(page==='home')home();else if(page==='menu')menu();else if(page==='analyse')analysing();else if(page==='result')result();else if(page==='dice')dicePage();else if(page==='status')status();else helpPage()}
-setInterval(()=>{if(page==='home'||page==='status')render()},1000);render();startNativeBluetooth();
+setInterval(()=>{if(page==='home'||page==='status')render()},1000);render();tryKnownDevice();
 </script></body></html>
