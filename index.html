@@ -30,9 +30,24 @@
 @keyframes bbArmL{0%,100%{transform:rotate(48deg)}25%{transform:rotate(68deg)}50%{transform:rotate(48deg)}75%{transform:rotate(30deg)}}
 @keyframes bbArmR{0%,100%{transform:rotate(-48deg)}25%{transform:rotate(-30deg)}50%{transform:rotate(-48deg)}75%{transform:rotate(-68deg)}}
 .pint-wrap.dead-finished{animation:none!important;display:flex;align-items:center;justify-content:center;transform:none!important}.dead-message{font-weight:900;font-size:18px;line-height:1.5;text-align:center}
+
+/* v1.4 progressive glass damage */
+.glass-crack{position:absolute;inset:0;width:100%;height:100%;z-index:6;pointer-events:none;overflow:visible}
+.crack-seg{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.shattering .glass-crack{animation:crackFlash .22s ease-in-out 3}
+.burst{position:absolute;left:50%;top:48%;width:12px;height:12px;z-index:10;pointer-events:none}
+.burst i{position:absolute;width:10px;height:10px;border-radius:2px;background:#f4b942;box-shadow:0 0 8px #f4b942;animation:burstPiece .9s ease-out forwards}
+.burst i:nth-child(2n){background:#e86f3a;box-shadow:0 0 8px #e86f3a}
+.burst i:nth-child(3n){background:#f7df72;box-shadow:0 0 8px #f7df72}
+.burst i:nth-child(1){--x:-75px;--y:-62px}.burst i:nth-child(2){--x:-92px;--y:5px}.burst i:nth-child(3){--x:-58px;--y:70px}.burst i:nth-child(4){--x:5px;--y:-86px}.burst i:nth-child(5){--x:70px;--y:-60px}.burst i:nth-child(6){--x:92px;--y:8px}.burst i:nth-child(7){--x:58px;--y:72px}.burst i:nth-child(8){--x:4px;--y:88px}
+@keyframes burstPiece{0%{transform:translate(0,0) rotate(0) scale(.4);opacity:1}70%{opacity:1}100%{transform:translate(var(--x),var(--y)) rotate(220deg) scale(1.15);opacity:0}}
+@keyframes crackFlash{50%{stroke:#e86f3a;filter:drop-shadow(0 0 4px #f4b942)}}
+.shattering{animation:explode .9s ease-in forwards!important}
+.boom{display:inline-block;font-size:36px;animation:boomPulse .55s ease-out}
+@keyframes boomPulse{0%{transform:scale(.2)}65%{transform:scale(1.35)}100%{transform:scale(1)}}
 </style>
 </head>
-<body><div id="deviceLock" class="device-lock"><div class="lock-lcd"><div class="lock-brand">BREATH//BUDDY</div><div id="lockBuddy" style="min-height:235px;display:flex;align-items:center;justify-content:center"></div><div id="lockState" class="lock-state">SEARCHING FOR BREATHBUDDY...</div><div id="lockDots" class="lock-dots">■ ■ ■ □ □</div><p class="note">Turn on your BreathBuddy device<br>and keep it nearby.</p><p id="lockDetail" class="small muted">DEVICE REQUIRED</p></div></div><main class="app"><section class="lcd"><header><span class="brand">BREATH BUDDY</span><span class="small">WEB v1.3.2</span></header><div id="screen" class="screen"></div><div id="footer" class="footer">READY</div></section></main>
+<body><div id="deviceLock" class="device-lock"><div class="lock-lcd"><div class="lock-brand">BREATH//BUDDY</div><div id="lockBuddy" style="min-height:235px;display:flex;align-items:center;justify-content:center"></div><div id="lockState" class="lock-state">SEARCHING FOR BREATHBUDDY...</div><div id="lockDots" class="lock-dots">■ ■ ■ □ □</div><p class="note">Turn on your BreathBuddy device<br>and keep it nearby.</p><p id="lockDetail" class="small muted">DEVICE REQUIRED</p></div></div><main class="app"><section class="lcd"><header><span class="brand">BREATH BUDDY</span><span class="small">WEB v1.4</span></header><div id="screen" class="screen"></div><div id="footer" class="footer">READY</div></section></main>
 <script>
 const states=[
  {name:'NOT DRUNK',fill:16,mood:'Sober and steady.',face:'^‿^'},
@@ -104,8 +119,24 @@ async function tryKnownDevice(){
 function remain(){return !analysed||!deadline?600:Math.max(0,Math.ceil((deadline-Date.now())/1000))}
 function clock(){const n=remain();return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
 function thirst(){if(!analysed)return'WAITING';const n=remain();return n>450?'FULL':n>240?'HAPPY':n>60?'THIRSTY':n>0?'PARCHED':'DEAD'}
-function crackLevel(){if(!analysed)return 0;const n=remain();if(n<=0)return 4;if(n<=60)return 3;if(n<=240)return 2;if(n<=450)return 1;return 0}
-function pint(dance=true){let dead=thirst()==='DEAD',s=states[state],cl=crackLevel(),anim=dead?'dead':('anim-'+state);let cracks=cl>=1?'<span class="crack c1">ϟ</span>':'';if(cl>=2)cracks+='<span class="crack c2">ϟ</span>';if(cl>=3)cracks+='<span class="crack c3">ϟ</span>';return `<div class="pint-wrap ${anim}${dance?' dancing':''}" data-buddy="1">${cracks}<div class="limb arm l"><span class="hand"></span></div><div class="limb arm r"><span class="hand"></span></div><div class="limb leg l"><span class="foot"></span></div><div class="limb leg r"><span class="foot"></span></div><div class="pint"><div class="inner"><div class="beer" style="height:${analysed?s.fill:12}%"><div class="foam"></div></div><div class="shine"></div><div class="face">${dead?'×﹏×':s.face}</div></div></div></div>`}
+function crackLevel(){if(!analysed)return 0;const n=remain();if(n<=0)return 8;if(n<=30)return 8;if(n<=90)return 7;if(n<=150)return 6;if(n<=210)return 5;if(n<=270)return 4;if(n<=330)return 3;if(n<=390)return 2;if(n<=450)return 1;return 0}
+function crackSvg(level){
+  if(level<=0)return '';
+  const segs=[
+    'M105 48 L101 62 L108 72',
+    'M108 72 L99 84 L104 97',
+    'M104 97 L94 109 L99 124',
+    'M99 124 L88 137 L92 151',
+    'M92 151 L82 164 L86 178',
+    'M101 62 L91 69 L84 78',
+    'M99 84 L113 91 L120 102',
+    'M94 109 L80 115 L72 126'
+  ];
+  return '<svg class="glass-crack" viewBox="0 0 195 220" aria-hidden="true">'+
+    segs.slice(0,Math.min(level,segs.length)).map((d,i)=>'<path class="crack-seg s'+i+'" d="'+d+'"/>').join('')+
+    '</svg>';
+}
+function pint(dance=true){let dead=thirst()==='DEAD',s=states[state],cl=crackLevel(),anim=dead?'dead':('anim-'+state);return `<div class="pint-wrap ${anim}${dance?' dancing':''}" data-buddy="1">${crackSvg(cl)}<div class="limb arm l"><span class="hand"></span></div><div class="limb arm r"><span class="hand"></span></div><div class="limb leg l"><span class="foot"></span></div><div class="limb leg r"><span class="foot"></span></div><div class="pint"><div class="inner"><div class="beer" style="height:${analysed?s.fill:12}%"><div class="foam"></div></div><div class="shine"></div><div class="face">${dead?'×﹏×':s.face}</div></div></div></div>`}
 function toast(msg){const old=document.getElementById('toast');if(old)old.remove();const t=document.createElement('div');t.id='toast';t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
 function stateFromReading(v){if(v<0.020)return 0;if(v<0.050)return 1;if(v<0.080)return 2;if(v<0.120)return 3;return 4}
 function applyReading(v){if(!Number.isFinite(v))return;state=stateFromReading(v);analysed=true;deadline=Date.now()+600000;waitingForReading=false;analysisStage='DONE';clearTimeout(analysisTimer);clearTimeout(analysisTimer2);resultDance=true;setTimeout(()=>{resultDance=false;if(page==='result')render()},8000);history.unshift({time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),state:states[state].name,value:v.toFixed(3)});history=history.slice(0,20);localStorage.setItem('bbHistory',JSON.stringify(history));page='result';render();toast('READING RECEIVED: '+v.toFixed(3))}
@@ -164,23 +195,23 @@ function updateBuddyLifecycle(){
   if(!analysed)return;
   const level=crackLevel(),dead=thirst()==='DEAD';
   document.querySelectorAll('[data-buddy="1"]').forEach(b=>{
-    ['c1','c2','c3'].forEach((cls,i)=>{
-      const need=level>=i+1,found=b.querySelector('.crack.'+cls);
-      if(need&&!found){
-        const x=document.createElement('span');x.className='crack '+cls;x.textContent='ϟ';
-        b.insertBefore(x,b.firstChild);
-      }else if(!need&&found)found.remove();
-    });
+    const old=b.querySelector('.glass-crack');
+    const holder=document.createElement('div');holder.innerHTML=crackSvg(level);
+    const fresh=holder.firstElementChild;
+    if(old&&fresh)old.replaceWith(fresh);else if(!old&&fresh)b.insertBefore(fresh,b.firstChild);else if(old&&!fresh)old.remove();
     if(dead&&!b.classList.contains('dead')){
       b.classList.remove('dancing','anim-0','anim-1','anim-2','anim-3','anim-4');
-      b.classList.add('dead');
+      b.classList.add('dead','shattering');
       const face=b.querySelector('.face');if(face)face.textContent='×﹏×';
+      const burst=document.createElement('div');burst.className='burst';burst.innerHTML='<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>';
+      b.appendChild(burst);
       setTimeout(()=>{
         if(b.isConnected){
+          b.classList.remove('shattering');
           b.classList.add('dead-finished');
-          b.innerHTML='<div class="dead-message">💥<br>BREATH BUDDY DIED</div>';
+          b.innerHTML='<div class="dead-message"><span class="boom">💥</span><br>BREATH BUDDY DIED</div>';
         }
-      },750);
+      },900);
     }
   });
 }
