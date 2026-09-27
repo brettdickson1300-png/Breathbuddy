@@ -29,9 +29,10 @@
 @keyframes bbBlasted{0%,100%{transform:translate3d(0,0,0) rotate(0)}20%{transform:translate3d(-6px,-4px,0) rotate(-5deg)}40%{transform:translate3d(3px,-7px,0) rotate(3deg)}60%{transform:translate3d(6px,-1px,0) rotate(5deg)}80%{transform:translate3d(-3px,-5px,0) rotate(-3deg)}}
 @keyframes bbArmL{0%,100%{transform:rotate(48deg)}25%{transform:rotate(68deg)}50%{transform:rotate(48deg)}75%{transform:rotate(30deg)}}
 @keyframes bbArmR{0%,100%{transform:rotate(-48deg)}25%{transform:rotate(-30deg)}50%{transform:rotate(-48deg)}75%{transform:rotate(-68deg)}}
+.pint-wrap.dead-finished{animation:none!important;display:flex;align-items:center;justify-content:center;transform:none!important}.dead-message{font-weight:900;font-size:18px;line-height:1.5;text-align:center}
 </style>
 </head>
-<body><div id="deviceLock" class="device-lock"><div class="lock-lcd"><div class="lock-brand">BREATH//BUDDY</div><div id="lockBuddy" style="min-height:235px;display:flex;align-items:center;justify-content:center"></div><div id="lockState" class="lock-state">SEARCHING FOR BREATHBUDDY...</div><div id="lockDots" class="lock-dots">■ ■ ■ □ □</div><p class="note">Turn on your BreathBuddy device<br>and keep it nearby.</p><p id="lockDetail" class="small muted">DEVICE REQUIRED</p></div></div><main class="app"><section class="lcd"><header><span class="brand">BREATH BUDDY</span><span class="small">WEB v1.3.1</span></header><div id="screen" class="screen"></div><div id="footer" class="footer">READY</div></section></main>
+<body><div id="deviceLock" class="device-lock"><div class="lock-lcd"><div class="lock-brand">BREATH//BUDDY</div><div id="lockBuddy" style="min-height:235px;display:flex;align-items:center;justify-content:center"></div><div id="lockState" class="lock-state">SEARCHING FOR BREATHBUDDY...</div><div id="lockDots" class="lock-dots">■ ■ ■ □ □</div><p class="note">Turn on your BreathBuddy device<br>and keep it nearby.</p><p id="lockDetail" class="small muted">DEVICE REQUIRED</p></div></div><main class="app"><section class="lcd"><header><span class="brand">BREATH BUDDY</span><span class="small">WEB v1.3.2</span></header><div id="screen" class="screen"></div><div id="footer" class="footer">READY</div></section></main>
 <script>
 const states=[
  {name:'NOT DRUNK',fill:16,mood:'Sober and steady.',face:'^‿^'},
@@ -104,7 +105,7 @@ function remain(){return !analysed||!deadline?600:Math.max(0,Math.ceil((deadline
 function clock(){const n=remain();return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
 function thirst(){if(!analysed)return'WAITING';const n=remain();return n>450?'FULL':n>240?'HAPPY':n>60?'THIRSTY':n>0?'PARCHED':'DEAD'}
 function crackLevel(){if(!analysed)return 0;const n=remain();if(n<=0)return 4;if(n<=60)return 3;if(n<=240)return 2;if(n<=450)return 1;return 0}
-function pint(dance=true){let dead=thirst()==='DEAD',s=states[state],cl=crackLevel(),anim=dead?'dead':('anim-'+state);let cracks=cl>=1?'<span class="crack c1">ϟ</span>':'';if(cl>=2)cracks+='<span class="crack c2">ϟ</span>';if(cl>=3)cracks+='<span class="crack c3">ϟ</span>';return `<div class="pint-wrap ${anim}${dance?' dancing':''}">${cracks}<div class="limb arm l"><span class="hand"></span></div><div class="limb arm r"><span class="hand"></span></div><div class="limb leg l"><span class="foot"></span></div><div class="limb leg r"><span class="foot"></span></div><div class="pint"><div class="inner"><div class="beer" style="height:${analysed?s.fill:12}%"><div class="foam"></div></div><div class="shine"></div><div class="face">${dead?'×﹏×':s.face}</div></div></div></div>`}
+function pint(dance=true){let dead=thirst()==='DEAD',s=states[state],cl=crackLevel(),anim=dead?'dead':('anim-'+state);let cracks=cl>=1?'<span class="crack c1">ϟ</span>':'';if(cl>=2)cracks+='<span class="crack c2">ϟ</span>';if(cl>=3)cracks+='<span class="crack c3">ϟ</span>';return `<div class="pint-wrap ${anim}${dance?' dancing':''}" data-buddy="1">${cracks}<div class="limb arm l"><span class="hand"></span></div><div class="limb arm r"><span class="hand"></span></div><div class="limb leg l"><span class="foot"></span></div><div class="limb leg r"><span class="foot"></span></div><div class="pint"><div class="inner"><div class="beer" style="height:${analysed?s.fill:12}%"><div class="foam"></div></div><div class="shine"></div><div class="face">${dead?'×﹏×':s.face}</div></div></div></div>`}
 function toast(msg){const old=document.getElementById('toast');if(old)old.remove();const t=document.createElement('div');t.id='toast';t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
 function stateFromReading(v){if(v<0.020)return 0;if(v<0.050)return 1;if(v<0.080)return 2;if(v<0.120)return 3;return 4}
 function applyReading(v){if(!Number.isFinite(v))return;state=stateFromReading(v);analysed=true;deadline=Date.now()+600000;waitingForReading=false;analysisStage='DONE';clearTimeout(analysisTimer);clearTimeout(analysisTimer2);resultDance=true;setTimeout(()=>{resultDance=false;if(page==='result')render()},8000);history.unshift({time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),state:states[state].name,value:v.toFixed(3)});history=history.slice(0,20);localStorage.setItem('bbHistory',JSON.stringify(history));page='result';render();toast('READING RECEIVED: '+v.toFixed(3))}
@@ -158,9 +159,35 @@ function historyView(){const rows=history.length?history.map(h=>`<div class="his
 function help(){page='help';render()}
 function helpPage(){el.innerHTML=`<div class="title">HOW IT WORKS</div><div class="statusbox"><p><b>1.</b> Analyse to start or reset the 10-minute timer.</p><p><b>2.</b> Analysis sets the pint's status from NOT DRUNK to BLASTED.</p><p><b>3.</b> Roll for a Drink is a separate weighted picker and never changes the character.</p><p><b>4.</b> When the timer reaches zero, the pint pal dies.</p><p><b>5.</b> Analyse again to revive it.</p></div><p class="note">BLE mode can receive an experimental reading from BreathBuddy hardware. Simulation mode remains available when disconnected. Readings are prototype estimates only and must not be used to decide whether to drive.</p><button style="width:100%;padding:14px;font:700 16px Courier New;border:3px solid var(--ink);background:var(--ink);color:var(--lcd)" onclick="goHome()">BACK HOME</button>`;foot.textContent='QUICK GUIDE'}
 function goHome(){page='home';render()}
+
+function updateBuddyLifecycle(){
+  if(!analysed)return;
+  const level=crackLevel(),dead=thirst()==='DEAD';
+  document.querySelectorAll('[data-buddy="1"]').forEach(b=>{
+    ['c1','c2','c3'].forEach((cls,i)=>{
+      const need=level>=i+1,found=b.querySelector('.crack.'+cls);
+      if(need&&!found){
+        const x=document.createElement('span');x.className='crack '+cls;x.textContent='ϟ';
+        b.insertBefore(x,b.firstChild);
+      }else if(!need&&found)found.remove();
+    });
+    if(dead&&!b.classList.contains('dead')){
+      b.classList.remove('dancing','anim-0','anim-1','anim-2','anim-3','anim-4');
+      b.classList.add('dead');
+      const face=b.querySelector('.face');if(face)face.textContent='×﹏×';
+      setTimeout(()=>{
+        if(b.isConnected){
+          b.classList.add('dead-finished');
+          b.innerHTML='<div class="dead-message">💥<br>BREATH BUDDY DIED</div>';
+        }
+      },750);
+    }
+  });
+}
 function render(){if(page==='home')home();else if(page==='menu')menu();else if(page==='analyse')analysing();else if(page==='result')result();else if(page==='dice')dicePage();else if(page==='status')status();else if(page==='history')historyView();else helpPage()}
 setInterval(()=>{
   const ht=document.getElementById('homeTimer');if(ht)ht.textContent=analysed?clock():'10:00';
   const st=document.getElementById('statusTimer');if(st)st.textContent=clock();
+  updateBuddyLifecycle();
 },1000);render();tryKnownDevice();
 </script></body></html>
