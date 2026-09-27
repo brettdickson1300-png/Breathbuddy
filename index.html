@@ -31,7 +31,7 @@
 @keyframes bbArmR{0%,100%{transform:rotate(-48deg)}25%{transform:rotate(-30deg)}50%{transform:rotate(-48deg)}75%{transform:rotate(-68deg)}}
 </style>
 </head>
-<body><div id="deviceLock" class="device-lock"><div class="lock-lcd"><div class="lock-brand">BREATH//BUDDY</div><div id="lockBuddy" style="min-height:235px;display:flex;align-items:center;justify-content:center"></div><div id="lockState" class="lock-state">SEARCHING FOR BREATHBUDDY...</div><div id="lockDots" class="lock-dots">■ ■ ■ □ □</div><p class="note">Turn on your BreathBuddy device<br>and keep it nearby.</p><p id="lockDetail" class="small muted">DEVICE REQUIRED</p></div></div><main class="app"><section class="lcd"><header><span class="brand">BREATH BUDDY</span><span class="small">WEB v1.3</span></header><div id="screen" class="screen"></div><div id="footer" class="footer">READY</div></section></main>
+<body><div id="deviceLock" class="device-lock"><div class="lock-lcd"><div class="lock-brand">BREATH//BUDDY</div><div id="lockBuddy" style="min-height:235px;display:flex;align-items:center;justify-content:center"></div><div id="lockState" class="lock-state">SEARCHING FOR BREATHBUDDY...</div><div id="lockDots" class="lock-dots">■ ■ ■ □ □</div><p class="note">Turn on your BreathBuddy device<br>and keep it nearby.</p><p id="lockDetail" class="small muted">DEVICE REQUIRED</p></div></div><main class="app"><section class="lcd"><header><span class="brand">BREATH BUDDY</span><span class="small">WEB v1.3.1</span></header><div id="screen" class="screen"></div><div id="footer" class="footer">READY</div></section></main>
 <script>
 const states=[
  {name:'NOT DRUNK',fill:16,mood:'Sober and steady.',face:'^‿^'},
@@ -40,7 +40,7 @@ const states=[
  {name:'DRUNK',fill:75,mood:'Properly drunk.',face:'×﹏×'},
  {name:'BLASTED',fill:94,mood:'Absolute chaos.',face:'◎﹏◎'}];
 const drinks=[['Beer',20],['Cider',15],['Ginger Beer',12],['Gin & Tonic',11],['Rum & Coke',10],['Vodka Lime',8],['Vodka Cruiser',7],['Red Wine',6],['White Wine',5],['Whisky',3],['Tequila Shot',2],['Rum',1]];
-let page='home',state=0,lastDrink='NO DRINK ROLLED',deadline=null,analysed=false,rolling=false,analysisStage='READY',analysisTimer=null,justConnected=false;
+let page='home',state=0,lastDrink='NO DRINK ROLLED',deadline=null,analysed=false,rolling=false,analysisStage='READY',analysisTimer=null,analysisTimer2=null,justConnected=false;
 let history=[];try{history=JSON.parse(localStorage.getItem('bbHistory')||'[]')}catch(e){history=[]}
 let bleDevice=null,bleCharacteristic=null,bleConnected=false,waitingForReading=false;
 const SERVICE_UUID='12345678-1234-1234-1234-123456789000';
@@ -50,7 +50,13 @@ const deviceLock=document.getElementById('deviceLock'),lockState=document.getEle
 function welcomeBuddy(jig=false){if(!lockBuddy)return;const s=states[state];lockBuddy.innerHTML=`<div class="pint-wrap anim-${state}${jig?' dancing':''}"><div class="limb arm l"><span class="hand"></span></div><div class="limb arm r"><span class="hand"></span></div><div class="limb leg l"><span class="foot"></span></div><div class="limb leg r"><span class="foot"></span></div><div class="pint"><div class="inner"><div class="beer" style="height:${analysed?s.fill:12}%"><div class="foam"></div></div><div class="shine"></div><div class="face">${s.face}</div></div></div></div>`}
 function setDeviceLock(mode,detail=''){
   if(mode==='connected'){
-    bleConnected=true; lockState.textContent=''; lockDetail.textContent=''; welcomeBuddy(true); render(); setTimeout(()=>{deviceLock.classList.add('hidden')},1800); return;
+    bleConnected=true;
+    deviceLock.classList.add('hidden');
+    justConnected=true;
+    page='home';
+    render();
+    setTimeout(()=>{justConnected=false},8000);
+    return;
   }
   bleConnected=false; deviceLock.classList.remove('hidden'); welcomeBuddy(false);
   if(mode==='connecting'){lockState.textContent='BREATHBUDDY FOUND';lockDetail.textContent=detail||'CONNECTING...';}
@@ -98,10 +104,10 @@ function remain(){return !analysed||!deadline?600:Math.max(0,Math.ceil((deadline
 function clock(){const n=remain();return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
 function thirst(){if(!analysed)return'WAITING';const n=remain();return n>450?'FULL':n>240?'HAPPY':n>60?'THIRSTY':n>0?'PARCHED':'DEAD'}
 function crackLevel(){if(!analysed)return 0;const n=remain();if(n<=0)return 4;if(n<=60)return 3;if(n<=240)return 2;if(n<=450)return 1;return 0}
-function pint(dance=true){let dead=thirst()==='DEAD',s=states[state],cl=crackLevel(),anim=dead?'dead':('anim-'+state)+(justConnected?' connect-jig':'');let cracks=cl>=1?'<span class="crack c1">ϟ</span>':'';if(cl>=2)cracks+='<span class="crack c2">ϟ</span>';if(cl>=3)cracks+='<span class="crack c3">ϟ</span>';return `<div class="pint-wrap ${anim}${dance?' dancing':''}">${cracks}<div class="limb arm l"><span class="hand"></span></div><div class="limb arm r"><span class="hand"></span></div><div class="limb leg l"><span class="foot"></span></div><div class="limb leg r"><span class="foot"></span></div><div class="pint"><div class="inner"><div class="beer" style="height:${analysed?s.fill:12}%"><div class="foam"></div></div><div class="shine"></div><div class="face">${dead?'×﹏×':s.face}</div></div></div></div>`}
+function pint(dance=true){let dead=thirst()==='DEAD',s=states[state],cl=crackLevel(),anim=dead?'dead':('anim-'+state);let cracks=cl>=1?'<span class="crack c1">ϟ</span>':'';if(cl>=2)cracks+='<span class="crack c2">ϟ</span>';if(cl>=3)cracks+='<span class="crack c3">ϟ</span>';return `<div class="pint-wrap ${anim}${dance?' dancing':''}">${cracks}<div class="limb arm l"><span class="hand"></span></div><div class="limb arm r"><span class="hand"></span></div><div class="limb leg l"><span class="foot"></span></div><div class="limb leg r"><span class="foot"></span></div><div class="pint"><div class="inner"><div class="beer" style="height:${analysed?s.fill:12}%"><div class="foam"></div></div><div class="shine"></div><div class="face">${dead?'×﹏×':s.face}</div></div></div></div>`}
 function toast(msg){const old=document.getElementById('toast');if(old)old.remove();const t=document.createElement('div');t.id='toast';t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
 function stateFromReading(v){if(v<0.020)return 0;if(v<0.050)return 1;if(v<0.080)return 2;if(v<0.120)return 3;return 4}
-function applyReading(v){if(!Number.isFinite(v))return;state=stateFromReading(v);analysed=true;deadline=Date.now()+600000;waitingForReading=false;analysisStage='DONE';clearTimeout(analysisTimer);history.unshift({time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),state:states[state].name,value:v.toFixed(3)});history=history.slice(0,20);localStorage.setItem('bbHistory',JSON.stringify(history));page='result';render();toast('READING RECEIVED: '+v.toFixed(3))}
+function applyReading(v){if(!Number.isFinite(v))return;state=stateFromReading(v);analysed=true;deadline=Date.now()+600000;waitingForReading=false;analysisStage='DONE';clearTimeout(analysisTimer);clearTimeout(analysisTimer2);resultDance=true;setTimeout(()=>{resultDance=false;if(page==='result')render()},8000);history.unshift({time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),state:states[state].name,value:v.toFixed(3)});history=history.slice(0,20);localStorage.setItem('bbHistory',JSON.stringify(history));page='result';render();toast('READING RECEIVED: '+v.toFixed(3))}
 async function connectBreathBuddy(){
   if(!navigator.bluetooth){toast('WEB BLUETOOTH NOT SUPPORTED HERE');return}
   try{
@@ -123,7 +129,7 @@ function onBleValue(e){
   if(waitingForReading)applyReading(value);
 }
 function weighted(){let total=drinks.reduce((a,x)=>a+x[1],0),r=Math.random()*total;for(const [n,w] of drinks){r-=w;if(r<=0)return n}return drinks[0][0]}
-function home(){const s=states[state];el.innerHTML=`<div class="home-meta"><span></span><span class="pill status-pill">${analysed?s.name:'READY'}</span><div class="mini-timer">${analysed?clock():'10:00'}</div></div><div class="home-boy">${pint()}</div><div class="home-actions"><button class="menu-btn" onclick="showMenu()">MENU</button><button class="analyse-btn" onclick="analyse()">ANALYSE</button></div>`;foot.textContent=thirst()==='DEAD'?'BREATH BUDDY DIED • ANALYSE TO REVIVE':'BREATHBUDDY CONNECTED • READY'}
+function home(){const s=states[state];el.innerHTML=`<div class="home-meta"><span></span><span class="pill status-pill">${analysed?s.name:'READY'}</span><div class="mini-timer" id="homeTimer">${analysed?clock():'10:00'}</div></div><div class="home-boy">${pint()}</div><div class="home-actions"><button class="menu-btn" onclick="showMenu()">MENU</button><button class="analyse-btn" onclick="analyse()">ANALYSE</button></div>`;foot.textContent=thirst()==='DEAD'?'BREATH BUDDY DIED • ANALYSE TO REVIVE':'READY'}
 function showMenu(){page='menu';render()}
 function menu(){el.innerHTML=`<div class="title">MAIN MENU</div><div class="menu"><button onclick="analyse()">ANALYSE BREATH<br><span class="small">Start/reset 10-minute timer</span></button><button onclick="dice()">ROLL FOR A DRINK<br><span class="small">Weighted random picker</span></button><button onclick="statusPage()">VIEW STATUS<br><span class="small">Timer + current state</span></button><button onclick="historyPage()">RESULT HISTORY<br><span class="small">Your last 20 analyses</span></button><button onclick="help()">HOW IT WORKS<br><span class="small">Quick guide</span></button><button onclick="goHome()">← BACK HOME</button></div>`;foot.textContent='TAP AN OPTION'}
 function analyse(){
@@ -132,7 +138,7 @@ function analyse(){
     waitingForReading=true;
     clearTimeout(analysisTimer);
     analysisTimer=setTimeout(()=>{analysisStage='SAMPLING BREATH...';render()},900);
-    analysisTimer=setTimeout(()=>{analysisStage='ANALYSING...';render()},2200);
+    analysisTimer2=setTimeout(()=>{analysisStage='ANALYSING...';render()},2200);
     foot.textContent='BREATHBUDDY SENSOR ACTIVE';
     return;
   }
@@ -146,12 +152,15 @@ function dice(){page='dice';render()}
 function dicePage(){el.innerHTML=`<div class="title">ROLL FOR A DRINK</div><p class="note center"><b>This picker is separate from your pint pal status.</b></p><div class="die" id="die">⚄</div><div class="drink" id="drink">${lastDrink}</div><div class="actions"><button onclick="goHome()">BACK</button><button class="primary" onclick="rollDrink()">ROLL</button></div><p class="note center">Beer, cider and mixers are more common. Straight spirits and shots are rarer.</p>`;foot.textContent='TAP ROLL'}
 function rollDrink(){if(rolling)return;rolling=true;let i=0,d=document.getElementById('die'),out=document.getElementById('drink');const t=setInterval(()=>{d.textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][Math.floor(Math.random()*6)];i++;if(i>12){clearInterval(t);lastDrink=weighted();out.textContent=lastDrink.toUpperCase();rolling=false;foot.textContent='TONIGHT\'S PICK: '+lastDrink.toUpperCase()}},70)}
 function statusPage(){page='status';render()}
-function status(){el.innerHTML=`<div class="title">STATUS</div>${pint()}<div class="statusbox"><div class="row"><b>ANALYSIS</b><span>${analysed?states[state].name:'NOT ANALYSED'}</span></div><hr><div class="row"><b>THIRST</b><span>${thirst()}</span></div><hr><div class="row"><b>NEXT ANALYSIS</b><span class="big">${clock()}</span></div><hr><div class="row"><b>LAST PICK</b><span>${lastDrink}</span></div></div><button style="width:100%;margin-top:15px;padding:14px;font:700 16px Courier New;border:3px solid var(--ink);background:var(--ink);color:var(--lcd)" onclick="goHome()">BACK HOME</button>`;foot.textContent='LIVE STATUS'}
+function status(){el.innerHTML=`<div class="title">STATUS</div>${pint()}<div class="statusbox"><div class="row"><b>ANALYSIS</b><span>${analysed?states[state].name:'NOT ANALYSED'}</span></div><hr><div class="row"><b>THIRST</b><span>${thirst()}</span></div><hr><div class="row"><b>NEXT ANALYSIS</b><span class="big" id="statusTimer">${clock()}</span></div><hr><div class="row"><b>LAST PICK</b><span>${lastDrink}</span></div></div><button style="width:100%;margin-top:15px;padding:14px;font:700 16px Courier New;border:3px solid var(--ink);background:var(--ink);color:var(--lcd)" onclick="goHome()">BACK HOME</button>`;foot.textContent='LIVE STATUS'}
 function historyPage(){page='history';render()}
 function historyView(){const rows=history.length?history.map(h=>`<div class="history-row"><b>${h.time}</b><span>${h.state}</span><span>${h.value}</span></div>`).join(''):'<p class="center muted">NO ANALYSES YET</p>';el.innerHTML=`<div class="title">RESULT HISTORY</div><div class="statusbox history">${rows}</div><p class="note center">Stored on this device. Prototype readings only.</p><button style="width:100%;margin-top:15px;padding:14px;font:700 16px Courier New;border:3px solid var(--ink);background:var(--ink);color:var(--lcd)" onclick="goHome()">BACK HOME</button>`;foot.textContent='LAST 20 RESULTS'}
 function help(){page='help';render()}
 function helpPage(){el.innerHTML=`<div class="title">HOW IT WORKS</div><div class="statusbox"><p><b>1.</b> Analyse to start or reset the 10-minute timer.</p><p><b>2.</b> Analysis sets the pint's status from NOT DRUNK to BLASTED.</p><p><b>3.</b> Roll for a Drink is a separate weighted picker and never changes the character.</p><p><b>4.</b> When the timer reaches zero, the pint pal dies.</p><p><b>5.</b> Analyse again to revive it.</p></div><p class="note">BLE mode can receive an experimental reading from BreathBuddy hardware. Simulation mode remains available when disconnected. Readings are prototype estimates only and must not be used to decide whether to drive.</p><button style="width:100%;padding:14px;font:700 16px Courier New;border:3px solid var(--ink);background:var(--ink);color:var(--lcd)" onclick="goHome()">BACK HOME</button>`;foot.textContent='QUICK GUIDE'}
 function goHome(){page='home';render()}
 function render(){if(page==='home')home();else if(page==='menu')menu();else if(page==='analyse')analysing();else if(page==='result')result();else if(page==='dice')dicePage();else if(page==='status')status();else if(page==='history')historyView();else helpPage()}
-setInterval(()=>{if(page==='home'||page==='status')render()},1000);render();tryKnownDevice();
+setInterval(()=>{
+  const ht=document.getElementById('homeTimer');if(ht)ht.textContent=analysed?clock():'10:00';
+  const st=document.getElementById('statusTimer');if(st)st.textContent=clock();
+},1000);render();tryKnownDevice();
 </script></body></html>
